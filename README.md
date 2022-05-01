@@ -82,7 +82,7 @@ val family : String = ttfFile.getCopyright(Locale.JAPANESE)
 ...
 ```
 
-If no value is found for the specified `Locale`, the `getter` function will fallback in order of [Locale.ENGLISH], [Locale.ROOT], the same language, and the first entry to return the first value that matches.
+If no value is found for the specified `Locale`, the `getter` function will fallback in order of `Locale.ENGLISH`, `Locale.ROOT`, the same language, and the first entry to return the first value that matches.
 
 ### Standard fields(`String`)
 
