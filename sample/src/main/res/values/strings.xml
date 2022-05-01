@@ -17,5 +17,4 @@
 
 <resources>
   <string name="app_name">TrueType Parser</string>
-  <string name="action_settings">Settings</string>
 </resources>

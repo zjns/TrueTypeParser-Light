@@ -1,4 +1,7 @@
 <!--
+  ~ Modified by Yubyf on 2022:
+  ~ Copyright (c) 2022 Yubyf <lpy19920505@gmail.com>
+  ~
   ~ Copyright (C) 2016 Jared Rummler <jared.rummler@gmail.com>
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +18,4 @@
   ~
   -->
 
-<manifest package="com.jaredrummler.truetypeparser"
-          xmlns:android="http://schemas.android.com/apk/res/android">
-
-</manifest>
+<manifest package="com.yubyf.truetypeparser" />
