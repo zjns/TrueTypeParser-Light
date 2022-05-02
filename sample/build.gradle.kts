@@ -35,6 +35,6 @@ dependencies {
     implementation(project(mapOf("path" to ":lib-truetypeparser-light")))
     implementation("com.google.android.material:material:1.5.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
 }
