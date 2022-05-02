@@ -1,6 +1,7 @@
 # TrueTypeParser-Light
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.yubyf/truetypeparser-light?color=brightgreen&label=Maven%20Central)](https://search.maven.org/artifact/io.github.yubyf/truetypeparser-light)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.yubyf/truetypeparser-light?color=informational&label=Maven%20Central)](https://search.maven.org/artifact/io.github.yubyf/truetypeparser-light)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/yubyf/TrueTypeParser-Light/CI/master?label=Test&logo=github)
 [![License](https://img.shields.io/github/license/Yubyf/TruetypeParser-Light)](https://github.com/Yubyf/truetypeparser/blob/master/LICENSE)
 [![API](https://img.shields.io/badge/API-21%2B-blue.svg?style=flat)](https://android-arsenal.com/api?level=21)
 ![GitHub top language](https://img.shields.io/github/languages/top/yubyf/TruetypeParser-Light)
