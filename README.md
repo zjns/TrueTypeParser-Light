@@ -16,7 +16,7 @@ Since the original repo has not been updated, this fork has made several optimiz
 
 ## Installation
 
-1\. Download [the latest AAR](https://repo1.maven.org/maven2/io/github/yubyf/truetypeparser-light/2.0.0/truetypeparser-light-2.0.0.aar).
+1\. Download [the latest AAR](https://repo1.maven.org/maven2/io/github/yubyf/truetypeparser-light/2.0.1/truetypeparser-light-2.0.1.aar).
 
 2\. Added the dependency from `mavenCentral`:
 
