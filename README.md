@@ -8,7 +8,7 @@
 
 TrueType Font Parser Light for Android based on [Apache FOP](http://xmlgraphics.apache.org/fop/).
 
-Since the original repo has not been updated, this fork has made several optimizations to the **TrueTypeParser-Light** module:
+Since the [original repo](https://github.com/jaredrummler/TrueTypeParser) has not been updated, this fork has made several optimizations to the **TrueTypeParser-Light** module:
 
 - Refactored with Kotlin.
 - Optimized the memory usage of file reading([issue](https://github.com/jaredrummler/TrueTypeParser/issues/4)).
