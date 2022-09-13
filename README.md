@@ -101,7 +101,7 @@ val weight : Int = ttfFile.weightClass
 
 ## ChangeLog
 
-### 2.1.0
+### 2.1.1
 
 - Replaced `getXXX()` functions of locale related fields with operator function `get()` and general function `getValueOrFallbackByLocale()`.
 
