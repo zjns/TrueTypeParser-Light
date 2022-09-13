@@ -21,6 +21,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
@@ -68,26 +70,37 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     properties.add(arrayOf("PARSE DURATION", "$duration ms"))
-                    ttfFile.fullName.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.fullNames.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("FULL NAMES", buildContentLine(map)))
                     }
-                    ttfFile.postscriptName.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.postscriptNames.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("POST SCRIPT NAMES", buildContentLine(map)))
                     }
-                    ttfFile.family.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.families.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("FAMILIES", buildContentLine(map)))
                     }
-                    ttfFile.subfamily.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.subfamilies.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("SUB FAMILIES", buildContentLine(map)))
                     }
-                    ttfFile.manufacturer.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.manufacturers.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("MANUFACTURER", buildContentLine(map)))
                     }
-                    ttfFile.designer.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.designers.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("DESIGNER", buildContentLine(map)))
                     }
+                    properties.add(arrayOf("VENDOR URL", ttfFile.vendorURL))
+                    properties.add(arrayOf("DESIGNER URL", ttfFile.designerURL))
+                    ttfFile.preferFamilies.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("PREFER FAMILIES", buildContentLine(map)))
+                    }
+                    ttfFile.preferSubfamilies.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("PREFER SUBFAMILIES", buildContentLine(map)))
+                    }
+                    ttfFile.sampleTexts.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("SAMPLE TEXTS", buildContentLine(map)))
+                    }
                     properties.add(arrayOf("WEIGHT", ttfFile.weightClass.toString()))
-                    ttfFile.copyright.takeIf { it.isNotEmpty() }?.let { map ->
+                    ttfFile.copyrights.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("COPYRIGHT", buildContentLine(map)))
                     }
                 } catch (e: IOException) {
@@ -111,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun buildContentLine(map: MutableMap<String, String>): String =
+    private fun buildContentLine(map: Map<String, String>): String =
         "<br/>" + map.map { "\t\t[${it.key}] - ${it.value}" }
             .reduce { acc, s -> "$acc<br/>$s" }
 

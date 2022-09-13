@@ -54,16 +54,3 @@ internal fun getLocaleCode(platformId: Int, languageId: Int): String {
         else -> null
     } ?: Locale.ROOT.toLanguageTag()
 }
-
-internal fun getValueOrFallbackByLocale(map: Map<String, String>, locale: Locale): String =
-    map[locale.toLanguageTag()]
-        ?: map.entries.firstOrNull { entry ->
-            Locale.forLanguageTag(entry.key).language == locale.language
-        }?.value
-        ?: map[BCP47Code.EN_US]
-        ?: map.entries.firstOrNull { entry ->
-            Locale.forLanguageTag(entry.key).language == Locale.ENGLISH.language
-        }?.value
-        ?: map[Locale.ROOT.toLanguageTag()]
-        ?: map.values.firstOrNull()
-        ?: ""

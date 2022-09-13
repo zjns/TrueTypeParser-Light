@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.yubyf.truetypeparser
 
 import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -26,41 +29,43 @@ class TTFFileTest {
         // Copyright
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.ENGLISH)
+            with(ttfFile) { copyrights[Locale.ENGLISH] }
         )
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.SIMPLIFIED_CHINESE)
+            with(ttfFile) { copyrights[Locale.SIMPLIFIED_CHINESE] }
         )
         // Family
-        Assert.assertEquals("Source Han Sans SC VF", ttfFile.getFamily(Locale.ENGLISH))
-        Assert.assertEquals("思源黑体 VF", ttfFile.getFamily(Locale.SIMPLIFIED_CHINESE))
-        Assert.assertEquals("思源黑体 VF", ttfFile.getFamily(Locale.TRADITIONAL_CHINESE))
-        Assert.assertEquals("Source Han Sans SC VF", ttfFile.getFamily(Locale.ROOT))
+        Assert.assertEquals("Source Han Sans SC VF", with(ttfFile) { families[Locale.ENGLISH] })
+        Assert.assertEquals("思源黑体 VF", with(ttfFile) { families[Locale.SIMPLIFIED_CHINESE] })
+        Assert.assertEquals("思源黑体 VF", with(ttfFile) { families[Locale.TRADITIONAL_CHINESE] })
+        Assert.assertEquals("Source Han Sans SC VF", with(ttfFile) { families[Locale.ROOT] })
         // Subfamily
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.SIMPLIFIED_CHINESE))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.TRADITIONAL_CHINESE))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ROOT))
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.SIMPLIFIED_CHINESE] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.TRADITIONAL_CHINESE] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ROOT] })
         // Full name
-        Assert.assertEquals("Source Han Sans SC VF", ttfFile.getFullName(Locale.ENGLISH))
-        Assert.assertEquals("思源黑体 VF", ttfFile.getFullName(Locale.SIMPLIFIED_CHINESE))
-        Assert.assertEquals("思源黑体 VF", ttfFile.getFullName(Locale.TRADITIONAL_CHINESE))
-        Assert.assertEquals("Source Han Sans SC VF", ttfFile.getFullName(Locale.ROOT))
+        Assert.assertEquals("Source Han Sans SC VF", with(ttfFile) { fullNames[Locale.ENGLISH] })
+        Assert.assertEquals("思源黑体 VF", with(ttfFile) { fullNames[Locale.SIMPLIFIED_CHINESE] })
+        Assert.assertEquals("思源黑体 VF", with(ttfFile) { fullNames[Locale.TRADITIONAL_CHINESE] })
+        Assert.assertEquals("Source Han Sans SC VF", with(ttfFile) { fullNames[Locale.ROOT] })
         // Manufacturer
-        Assert.assertEquals("Adobe", ttfFile.getManufacturer(Locale.ENGLISH))
+        Assert.assertEquals("Adobe", with(ttfFile) { manufacturers[Locale.ENGLISH] })
         // Designer
         Assert.assertEquals(
             "Ryoko NISHIZUKA 西塚涼子 (kana, bopomofo & ideographs); Paul D. Hunt (Latin, Greek & Cyrillic); Sandoll Communications 산돌커뮤니케이션, Soo-young JANG 장수영 & Joo-yeon KANG 강주연 (hangul elements, letters & syllables)",
-            ttfFile.getDesigner(Locale.ENGLISH)
+            with(ttfFile) { designers[Locale.ENGLISH] }
         )
         // Vendor URL
         Assert.assertEquals("http://www.adobe.com/type/", ttfFile.vendorURL)
         // Preferred Subfamily
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.SIMPLIFIED_CHINESE))
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.TRADITIONAL_CHINESE))
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.ROOT))
+        Assert.assertEquals("ExtraLight", with(ttfFile) { preferSubfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("ExtraLight",
+            with(ttfFile) { preferSubfamilies[Locale.SIMPLIFIED_CHINESE] })
+        Assert.assertEquals("ExtraLight",
+            with(ttfFile) { preferSubfamilies[Locale.TRADITIONAL_CHINESE] })
+        Assert.assertEquals("ExtraLight", with(ttfFile) { preferSubfamilies[Locale.ROOT] })
     }
 
     @Test
@@ -71,43 +76,43 @@ class TTFFileTest {
         // Copyright
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.ENGLISH)
+            with(ttfFile) { copyrights[Locale.ENGLISH] }
         )
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.JAPANESE)
+            with(ttfFile) { copyrights[Locale.JAPANESE] }
         )
         // Family
-        Assert.assertEquals("Source Han Sans Medium", ttfFile.getFamily(Locale.ENGLISH))
-        Assert.assertEquals("源ノ角ゴシック Medium", ttfFile.getFamily(Locale.JAPANESE))
-        Assert.assertEquals("Source Han Sans Medium", ttfFile.getFamily(Locale.ROOT))
+        Assert.assertEquals("Source Han Sans Medium", with(ttfFile) { families[Locale.ENGLISH] })
+        Assert.assertEquals("源ノ角ゴシック Medium", with(ttfFile) { families[Locale.JAPANESE] })
+        Assert.assertEquals("Source Han Sans Medium", with(ttfFile) { families[Locale.ROOT] })
         // Subfamily
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.JAPANESE))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ROOT))
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.JAPANESE] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ROOT] })
         // Full name
-        Assert.assertEquals("Source Han Sans Medium", ttfFile.getFullName(Locale.ENGLISH))
+        Assert.assertEquals("Source Han Sans Medium", with(ttfFile) { fullNames[Locale.ENGLISH] })
         Assert.assertEquals("源ノ角ゴシック Medium",
-            ttfFile.getFullName(Locale.JAPANESE))
-        Assert.assertEquals("Source Han Sans Medium", ttfFile.getFullName(Locale.ROOT))
+            with(ttfFile) { fullNames[Locale.JAPANESE] })
+        Assert.assertEquals("Source Han Sans Medium", with(ttfFile) { fullNames[Locale.ROOT] })
         // Manufacturer
-        Assert.assertEquals("Adobe", ttfFile.getManufacturer(Locale.ENGLISH))
+        Assert.assertEquals("Adobe", with(ttfFile) { manufacturers[Locale.ENGLISH] })
         // Designer
         Assert.assertEquals(
             "Ryoko NISHIZUKA 西塚涼子 (kana, bopomofo & ideographs); Paul D. Hunt (Latin, Greek & Cyrillic); Sandoll Communications 산돌커뮤니케이션, Soo-young JANG 장수영 & Joo-yeon KANG 강주연 (hangul elements, letters & syllables)",
-            ttfFile.getDesigner(Locale.ENGLISH)
+            with(ttfFile) { designers[Locale.ENGLISH] }
         )
         // Vendor URL
         Assert.assertEquals("http://www.adobe.com/type/", ttfFile.vendorURL)
         // Preferred Family
-        Assert.assertEquals("Source Han Sans", ttfFile.getPreferFamily(Locale.ENGLISH))
+        Assert.assertEquals("Source Han Sans", with(ttfFile) { preferFamilies[Locale.ENGLISH] })
         Assert.assertEquals("源ノ角ゴシック",
-            ttfFile.getPreferFamily(Locale.JAPANESE))
-        Assert.assertEquals("Source Han Sans", ttfFile.getPreferFamily(Locale.ROOT))
+            with(ttfFile) { preferFamilies[Locale.JAPANESE] })
+        Assert.assertEquals("Source Han Sans", with(ttfFile) { preferFamilies[Locale.ROOT] })
         // Preferred Subfamily
-        Assert.assertEquals("Medium", ttfFile.getPreferSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("Medium", ttfFile.getPreferSubfamily(Locale.JAPANESE))
-        Assert.assertEquals("Medium", ttfFile.getPreferSubfamily(Locale.ROOT))
+        Assert.assertEquals("Medium", with(ttfFile) { preferSubfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("Medium", with(ttfFile) { preferSubfamilies[Locale.JAPANESE] })
+        Assert.assertEquals("Medium", with(ttfFile) { preferSubfamilies[Locale.ROOT] })
     }
 
     @Test
@@ -118,37 +123,37 @@ class TTFFileTest {
         // Copyright
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.ENGLISH)
+            with(ttfFile) { copyrights[Locale.ENGLISH] }
         )
         Assert.assertEquals(
             "© 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'.",
-            ttfFile.getCopyright(Locale.KOREAN)
+            with(ttfFile) { copyrights[Locale.KOREAN] }
         )
         // Family
-        Assert.assertEquals("Source Han Sans KR VF", ttfFile.getFamily(Locale.ENGLISH))
-        Assert.assertEquals("본고딕 KR VF", ttfFile.getFamily(Locale.KOREAN))
-        Assert.assertEquals("Source Han Sans KR VF", ttfFile.getFamily(Locale.ROOT))
+        Assert.assertEquals("Source Han Sans KR VF", with(ttfFile) { families[Locale.ENGLISH] })
+        Assert.assertEquals("본고딕 KR VF", with(ttfFile) { families[Locale.KOREAN] })
+        Assert.assertEquals("Source Han Sans KR VF", with(ttfFile) { families[Locale.ROOT] })
         // Subfamily
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.KOREAN))
-        Assert.assertEquals("Regular", ttfFile.getSubfamily(Locale.ROOT))
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.KOREAN] })
+        Assert.assertEquals("Regular", with(ttfFile) { subfamilies[Locale.ROOT] })
         // Full name
-        Assert.assertEquals("Source Han Sans KR VF", ttfFile.getFullName(Locale.ENGLISH))
+        Assert.assertEquals("Source Han Sans KR VF", with(ttfFile) { fullNames[Locale.ENGLISH] })
         Assert.assertEquals("본고딕 KR VF",
-            ttfFile.getFullName(Locale.KOREAN))
-        Assert.assertEquals("Source Han Sans KR VF", ttfFile.getFullName(Locale.ROOT))
+            with(ttfFile) { fullNames[Locale.KOREAN] })
+        Assert.assertEquals("Source Han Sans KR VF", with(ttfFile) { fullNames[Locale.ROOT] })
         // Manufacturer
-        Assert.assertEquals("Adobe", ttfFile.getManufacturer(Locale.ENGLISH))
+        Assert.assertEquals("Adobe", with(ttfFile) { manufacturers[Locale.ENGLISH] })
         // Designer
         Assert.assertEquals(
             "Ryoko NISHIZUKA 西塚涼子 (kana, bopomofo & ideographs); Paul D. Hunt (Latin, Greek & Cyrillic); Sandoll Communications 산돌커뮤니케이션, Soo-young JANG 장수영 & Joo-yeon KANG 강주연 (hangul elements, letters & syllables)",
-            ttfFile.getDesigner(Locale.ENGLISH)
+            with(ttfFile) { designers[Locale.ENGLISH] }
         )
         // Vendor URL
         Assert.assertEquals("http://www.adobe.com/type/", ttfFile.vendorURL)
         // Preferred Subfamily
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.ENGLISH))
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.KOREAN))
-        Assert.assertEquals("ExtraLight", ttfFile.getPreferSubfamily(Locale.ROOT))
+        Assert.assertEquals("ExtraLight", with(ttfFile) { preferSubfamilies[Locale.ENGLISH] })
+        Assert.assertEquals("ExtraLight", with(ttfFile) { preferSubfamilies[Locale.KOREAN] })
+        Assert.assertEquals("ExtraLight", with(ttfFile) { preferSubfamilies[Locale.ROOT] })
     }
 }
