@@ -19,6 +19,7 @@ internal val SFNT_VERSIONS = longArrayOf(
 
 internal const val TABLE_NAME = "name"
 internal const val TABLE_OS2 = "OS/2"
+internal const val TABLE_FVAR = "fvar"
 
 internal const val PLATFORM_ID_MACINTOSH = 1
 internal const val PLATFORM_ID_MICROSOFT = 3

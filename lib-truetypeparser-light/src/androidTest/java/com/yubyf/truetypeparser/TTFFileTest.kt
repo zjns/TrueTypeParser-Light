@@ -24,6 +24,8 @@ class TTFFileTest {
     @Test
     fun testOpenSourceHanSansSCVf() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansSC-VF.otf"))
+        // Variable
+        Assert.assertTrue(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 250)
         // Copyright
@@ -71,6 +73,8 @@ class TTFFileTest {
     @Test
     fun testOpenSourceHanSansJ() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansJ-Medium.otf"))
+        // Variable
+        Assert.assertFalse(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 500)
         // Copyright
@@ -118,6 +122,8 @@ class TTFFileTest {
     @Test
     fun testOpenSourceHanSansKRVf() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansKR-VF.ttf"))
+        // Variable
+        Assert.assertTrue(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 250)
         // Copyright

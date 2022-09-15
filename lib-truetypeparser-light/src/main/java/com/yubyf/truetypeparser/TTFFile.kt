@@ -160,6 +160,12 @@ class TTFFile internal constructor() {
      */
     var weightClass = 0
         private set
+
+    /**
+     * Whether the font is variable font.
+     */
+    var variable = false
+        private set
     //endregion
 
     /**
@@ -202,6 +208,9 @@ class TTFFile internal constructor() {
         reader.skip(2 * 3)
         for (i in 0 until numTables) {
             TableDirectory().read(reader).run {
+                if (tag == TABLE_FVAR) {
+                    variable = true
+                }
                 tableDirectories[tag] = this
             }
         }
