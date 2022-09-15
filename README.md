@@ -101,6 +101,10 @@ val weight : Int = ttfFile.weightClass
 
 ## ChangeLog
 
+### 2.1.2
+
+- Added property `variable` to indicate if the font is a variable font.
+
 ### 2.1.1
 
 - Replaced `getXXX()` functions of locale related fields with operator function `get()` and general function `getValueOrFallbackByLocale()`.
