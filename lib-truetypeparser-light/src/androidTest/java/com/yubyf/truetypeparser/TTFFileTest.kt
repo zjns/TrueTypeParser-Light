@@ -24,8 +24,6 @@ class TTFFileTest {
     @Test
     fun testOpenSourceHanSansSCVf() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansSC-VF.otf"))
-        // Variable
-        Assert.assertTrue(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 250)
         // Copyright
@@ -68,13 +66,16 @@ class TTFFileTest {
         Assert.assertEquals("ExtraLight",
             ttfFile.preferSubfamilies[Locale.TRADITIONAL_CHINESE])
         Assert.assertEquals("ExtraLight", ttfFile.preferSubfamilies[Locale.ROOT])
+
+        // Variable
+        Assert.assertTrue(ttfFile.variable)
+        Assert.assertEquals(1, ttfFile.variationAxes.size)
+        Assert.assertEquals(7, ttfFile.variationInstances.size)
     }
 
     @Test
     fun testOpenSourceHanSansJ() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansJ-Medium.otf"))
-        // Variable
-        Assert.assertFalse(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 500)
         // Copyright
@@ -117,13 +118,14 @@ class TTFFileTest {
         Assert.assertEquals("Medium", ttfFile.preferSubfamilies[Locale.ENGLISH])
         Assert.assertEquals("Medium", ttfFile.preferSubfamilies[Locale.JAPANESE])
         Assert.assertEquals("Medium", ttfFile.preferSubfamilies[Locale.ROOT])
+
+        // Variable
+        Assert.assertFalse(ttfFile.variable)
     }
 
     @Test
     fun testOpenSourceHanSansKRVf() = runTest {
         val ttfFile = TTFFile.open(context.assets.open("SourceHanSansKR-VF.ttf"))
-        // Variable
-        Assert.assertTrue(ttfFile.variable)
         // Weight
         Assert.assertEquals(ttfFile.weightClass, 250)
         // Copyright
@@ -161,5 +163,10 @@ class TTFFileTest {
         Assert.assertEquals("ExtraLight", ttfFile.preferSubfamilies[Locale.ENGLISH])
         Assert.assertEquals("ExtraLight", ttfFile.preferSubfamilies[Locale.KOREAN])
         Assert.assertEquals("ExtraLight", ttfFile.preferSubfamilies[Locale.ROOT])
+
+        // Variable
+        Assert.assertTrue(ttfFile.variable)
+        Assert.assertEquals(1, ttfFile.variationAxes.size)
+        Assert.assertEquals(7, ttfFile.variationInstances.size)
     }
 }

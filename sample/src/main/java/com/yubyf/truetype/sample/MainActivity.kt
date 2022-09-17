@@ -68,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     properties.add(arrayOf("PARSE DURATION", "$duration ms"))
-                    properties.add(arrayOf("VARIABLE FONT", ttfFile.variable.toString()))
                     ttfFile.fullNames.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("FULL NAMES", buildContentLine(map)))
                     }
@@ -99,6 +98,15 @@ class MainActivity : AppCompatActivity() {
                         properties.add(arrayOf("SAMPLE TEXTS", buildContentLine(map)))
                     }
                     properties.add(arrayOf("WEIGHT", ttfFile.weightClass.toString()))
+
+                    properties.add(arrayOf("VARIABLE FONT", ttfFile.variable.toString()))
+                    ttfFile.variationAxes.takeIf { it.isNotEmpty() }?.let { list ->
+                        properties.add(arrayOf("VARIATION AXES", buildContentLine(list)))
+                    }
+                    ttfFile.variationInstances.takeIf { it.isNotEmpty() }?.let { list ->
+                        properties.add(arrayOf("VARIATION INSTANCES", buildContentLine(list)))
+                    }
+
                     ttfFile.copyrights.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("COPYRIGHT", buildContentLine(map)))
                     }
@@ -125,6 +133,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun buildContentLine(map: Map<String, String>): String =
         "<br/>" + map.map { "\t\t[${it.key}] - ${it.value}" }
+            .reduce { acc, s -> "$acc<br/>$s" }
+
+    private fun buildContentLine(list: List<Any>): String =
+        "<br/>" + list.map { "\t\t${it}" }
             .reduce { acc, s -> "$acc<br/>$s" }
 
     private fun importFont(context: Context, fileUri: Uri): String? = runCatching {

@@ -171,6 +171,15 @@ internal class FontStreamReader : Closeable {
     }
 
     /**
+     * Read 32 bytes fixed float(16.16).
+     *
+     * @return One float
+     * @throws IOException If EOF is reached
+     */
+    @Throws(IOException::class)
+    fun readFixedFloat32(): Float = readUInt32() / 65536f
+
+    /**
      * Read an ISO-8859-1 string of length bytes.
      *
      * @param length The length of the string to read

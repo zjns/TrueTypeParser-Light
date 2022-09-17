@@ -50,6 +50,9 @@ class TTFFile internal constructor() {
     private val _preferFamilies: MutableMap<String, String> = mutableMapOf()
     private val _preferSubfamilies: MutableMap<String, String> = mutableMapOf()
     private val _sampleTexts: MutableMap<String, String> = mutableMapOf()
+    private val _extraFields: MutableMap<Int, MutableMap<String, String>> = mutableMapOf()
+    private val _variationAxes: MutableList<VariationAxis> = mutableListOf()
+    private val _variationInstances: MutableList<VariationInstance> = mutableListOf()
 
     //region Public fields
     /**
@@ -166,6 +169,76 @@ class TTFFile internal constructor() {
      */
     var variable = false
         private set
+
+    /**
+     * The variation axes of this font if it is a variable font.
+     *
+     * Only available if the value of [variable] is `true`.
+     */
+    val variationAxes: List<VariationAxis>
+        get() = _variationAxes.toList()
+
+    /**
+     * The variation instances of this font if it is a variable font.
+     *
+     * Only available if the value of [variable] is `true`.
+     */
+    val variationInstances: List<VariationInstance>
+        get() = _variationInstances.toList()
+
+    /**
+     * The variation axis data.
+     *
+     * @param tag The axis name..
+     * @param minValue The minimum style coordinate for the axis.
+     * @param defaultValue The default style coordinate for the axis.
+     * @param maxValue The maximum style coordinate for the axis.
+     */
+    data class VariationAxis(
+        val tag: String,
+        val minValue: Float,
+        val defaultValue: Float,
+        val maxValue: Float,
+        internal val _nameId: Int,
+        var nm: String = "",
+    ) {
+        /**
+         * The designation in the 'name' table in different locales.
+         */
+        var name: Map<String, String> = emptyMap()
+            internal set
+
+        override fun toString(): String {
+            return "[tag=$tag, minValue=$minValue, defaultValue=$defaultValue, maxValue=$maxValue, name=$name]"
+        }
+    }
+
+    /**
+     * The variation instance data.
+     *
+     * @param coordinates The coordinates of defined instances in different axes.
+     */
+    data class VariationInstance(
+        internal val _nameId: Int,
+        val coordinates: Map<String, Float>,
+        internal val _postscriptNameId: Int?,
+    ) {
+        /**
+         * The names of the defined instance coordinate in different locales.
+         */
+        var name: Map<String, String> = emptyMap()
+            internal set
+
+        /**
+         * The PostScript names of the defined instance coordinate in different locales.
+         */
+        var postscriptName: Map<String, String> = emptyMap()
+            internal set
+
+        override fun toString(): String {
+            return "[name=$name, coordinates=$coordinates, postscriptName=$postscriptName]"
+        }
+    }
     //endregion
 
     /**
@@ -223,23 +296,20 @@ class TTFFile internal constructor() {
     private fun readTablesOrderByOffset(reader: FontStreamReader) {
         val nameEntry = tableDirectories[TABLE_NAME]
         val os2Entry = tableDirectories[TABLE_OS2]
+        val fvarEntry = tableDirectories[TABLE_FVAR]
         // Read table by order of offset from the beginning of the file to reduce the reading duration
-        when {
-            nameEntry != null && os2Entry != null -> {
-                if (nameEntry.offset > os2Entry.offset) {
-                    readWeight(reader)
-                    readName(reader)
-                } else {
-                    readName(reader)
-                    readWeight(reader)
+        sequenceOf(nameEntry, os2Entry, fvarEntry).sortedBy { it?.offset }.forEach {
+            it?.let { tableDirectory ->
+                when (tableDirectory.tag) {
+                    TABLE_NAME -> readName(reader)
+                    TABLE_OS2 -> readWeight(reader)
+                    TABLE_FVAR -> runCatching { readFvarTable(reader) }
                 }
             }
-            nameEntry != null -> {
-                readName(reader)
-            }
-            os2Entry != null -> {
-                readWeight(reader)
-            }
+        }
+        if (variable) {
+            // If the font is variable, we need to populate the names of the variation fields.
+            populateVariationNames()
         }
     }
 
@@ -280,7 +350,7 @@ class TTFFile internal constructor() {
                 reader.readTo(this)
             }))
         }?.use { nameReader ->
-            for (i in 0 until nameCount) {
+            (0 until nameCount).forEach { i ->
                 // Every name record is 12 bytes long - 6xUInt16
                 nameReader.seekAt(i * 12L)
                 val platformId = nameReader.readUInt16()
@@ -291,7 +361,7 @@ class TTFFile internal constructor() {
                 val nameStringOffset = nameReader.readUInt16()
                 if (platformId != PLATFORM_ID_MACINTOSH && platformId != PLATFORM_ID_MICROSOFT
                     || encodingId != ENCODING_ID_UNICODE_1_0 && encodingId != ENCODING_ID_UNICODE_1_1
-                ) continue
+                ) return@forEach
                 nameReader.seekAt((stringOffset
                         // Back to the beginning of the table
                         // We moved 3xUInt16 at the beginning of this function ↑.
@@ -316,11 +386,87 @@ class TTFFile internal constructor() {
                         NAME_ID_PREFERRED_FAMILY -> _preferFamilies[locale] = nameText
                         NAME_ID_PREFERRED_SUBFAMILY -> _preferSubfamilies[locale] = nameText
                         NAME_ID_SAMPLE_TEXT -> _sampleTexts[locale] = nameText
+                        in 256 until 32768 -> _extraFields[nameId]?.let { it[locale] = nameText }
+                            ?: run { _extraFields[nameId] = mutableMapOf(locale to nameText) }
                         else -> {}
                     }
                 }
             }
         } ?: throw IOException("Name table not found")
+    }
+
+    private fun readFvarTable(reader: FontStreamReader) {
+        // Skip table version number - UInt16 * 2
+        seekTable(reader, TABLE_FVAR, 4)
+        // Axes array offset
+        reader.readUInt16()
+        // Skip reserved field - UInt16
+        reader.skip(2)
+        val axisCount = reader.readUInt16()
+        if (axisCount == 0) {
+            variable = false
+            return
+        }
+        val axisSize = reader.readUInt16()
+        val instanceCount = reader.readUInt16()
+        val instanceSize = reader.readUInt16()
+        // Variation axis record
+        FontStreamReader(ByteArrayInputStream(ByteArray(axisSize * axisCount).apply {
+            reader.readTo(this)
+        })).use { axisReader ->
+            (0 until axisCount).forEach { i ->
+                axisReader.seekAt((i * axisSize).toLong())
+                val axisTag = axisReader.readString(4)
+                val axisMinValue = axisReader.readFixedFloat32()
+                val axisDefaultValue = axisReader.readFixedFloat32()
+                val axisMaxValue = axisReader.readFixedFloat32()
+                // Axis flags
+                axisReader.readUInt16()
+                val axisNameId = axisReader.readUInt16()
+                _variationAxes += VariationAxis(
+                    axisTag,
+                    axisMinValue,
+                    axisDefaultValue,
+                    axisMaxValue,
+                    axisNameId
+                )
+            }
+        }
+        if (instanceCount <= 0) {
+            return
+        }
+        val instanceIncludePostScriptName = 2 * 3 + 4 * axisCount == instanceSize
+        // Instance record
+        FontStreamReader(ByteArrayInputStream(ByteArray(instanceSize * instanceCount).apply {
+            reader.readTo(this)
+        })).use { instanceReader ->
+            (0 until instanceCount).forEach { i ->
+                instanceReader.seekAt((i * instanceSize).toLong())
+                val instanceNameId = instanceReader.readUInt16()
+                // Instance flags
+                instanceReader.readUInt16()
+                val instanceCoordinates = _variationAxes.associate { axis ->
+                    axis.tag to instanceReader.readFixedFloat32()
+                }
+                val instancePostScriptNameId =
+                    if (instanceIncludePostScriptName) instanceReader.readUInt16() else null
+                _variationInstances += VariationInstance(
+                    instanceNameId,
+                    instanceCoordinates,
+                    instancePostScriptNameId
+                )
+            }
+        }
+    }
+
+    private fun populateVariationNames() {
+        _variationAxes.forEach { axis ->
+            axis.name = _extraFields[axis._nameId] ?: emptyMap()
+        }
+        _variationInstances.forEach { instance ->
+            instance.name = _extraFields[instance._nameId] ?: emptyMap()
+            instance.postscriptName = _extraFields[instance._postscriptNameId] ?: emptyMap()
+        }
     }
 
     /**
