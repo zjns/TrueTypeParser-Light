@@ -395,6 +395,13 @@ class TTFFile internal constructor() {
         } ?: throw IOException("Name table not found")
     }
 
+    /**
+     * Read the [TABLE_FVAR] table.
+     * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6fvar.html
+     * https://learn.microsoft.com/en-us/typography/opentype/spec/fvar
+     *
+     * @throws IOException In case of a I/O problem
+     */
     private fun readFvarTable(reader: FontStreamReader) {
         // Skip table version number - UInt16 * 2
         seekTable(reader, TABLE_FVAR, 4)
