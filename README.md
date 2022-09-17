@@ -99,7 +99,23 @@ val designerURL : String = ttfFile.designerURL
 val weight : Int = ttfFile.weightClass
 ```
 
+### Variation fields
+
+```kotlin
+// Whether the font is variable font.
+val variable : Boolean = ttfFile.variable
+
+// Get the variation axes.
+val axes : List<VariationAxis> = ttfFile.variationAxes
+// Get the variation instances.
+val instances : List<VariationInstance> = ttfFile.variationInstances
+```
+
 ## ChangeLog
+
+### 2.1.3
+
+- Added properties `variationAxes` and `variationInstances` for variable fonts.
 
 ### 2.1.2
 
