@@ -19,7 +19,11 @@
  */
 package com.yubyf.truetypeparser
 
-import java.io.*
+import java.io.Closeable
+import java.io.EOFException
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
 import java.nio.charset.Charset
 
 /**
@@ -177,7 +181,7 @@ internal class FontStreamReader : Closeable {
      * @throws IOException If EOF is reached
      */
     @Throws(IOException::class)
-    fun readFixedFloat32(): Float = readUInt32() / 65536f
+    fun readFixedFloat32(): Float = readInt32() / 65536f
 
     /**
      * Read an ISO-8859-1 string of length bytes.
