@@ -110,6 +110,18 @@ class MainActivity : AppCompatActivity() {
                     ttfFile.copyrights.takeIf { it.isNotEmpty() }?.let { map ->
                         properties.add(arrayOf("COPYRIGHT", buildContentLine(map)))
                     }
+                    properties.add(arrayOf("UNIQUE IDENTIFIER", ttfFile.uniqueIdentifier))
+                    properties.add(arrayOf("VERSION", ttfFile.version))
+                    ttfFile.trademarks.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("TRADEMARKS", buildContentLine(map)))
+                    }
+                    ttfFile.descriptions.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("DESCRIPTIONS", buildContentLine(map)))
+                    }
+                    ttfFile.licenseDescriptions.takeIf { it.isNotEmpty() }?.let { map ->
+                        properties.add(arrayOf("LICENSE DESCRIPTIONS", buildContentLine(map)))
+                    }
+                    properties.add(arrayOf("LICENSE URL", ttfFile.licenseInfoURL))
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -140,8 +152,9 @@ class MainActivity : AppCompatActivity() {
             .reduce { acc, s -> "$acc<br/>$s" }
 
     private fun importFont(context: Context, fileUri: Uri): String? = runCatching {
-        val name = context.contentResolver.query(fileUri, null, null,
-            null, null)?.use { cursor ->
+        val name = context.contentResolver.query(
+            fileUri, null, null, null, null
+        )?.use { cursor ->
             // Get the name of the font file
             val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
             cursor.moveToFirst()

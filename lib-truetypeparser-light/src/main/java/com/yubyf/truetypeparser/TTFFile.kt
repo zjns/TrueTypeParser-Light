@@ -45,8 +45,11 @@ class TTFFile internal constructor() {
     private val _subfamilies: MutableMap<String, String> = mutableMapOf()
     private val _fullNames: MutableMap<String, String> = mutableMapOf()
     private val _postscriptNames: MutableMap<String, String> = mutableMapOf()
+    private val _trademarks: MutableMap<String, String> = mutableMapOf()
     private val _manufacturers: MutableMap<String, String> = mutableMapOf()
     private val _designers: MutableMap<String, String> = mutableMapOf()
+    private val _descriptions: MutableMap<String, String> = mutableMapOf()
+    private val _licenseDescriptions: MutableMap<String, String> = mutableMapOf()
     private val _preferFamilies: MutableMap<String, String> = mutableMapOf()
     private val _preferSubfamilies: MutableMap<String, String> = mutableMapOf()
     private val _sampleTexts: MutableMap<String, String> = mutableMapOf()
@@ -62,7 +65,7 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val copyrights: Map<String, String>
-        get() = _copyrights.toMap()
+        get() = _copyrights.toImmutableMap()
 
     /**
      * Font Family names in different locales.
@@ -71,7 +74,7 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val families: Map<String, String>
-        get() = _families.toMap()
+        get() = _families.toImmutableMap()
 
     /**
      * Font Subfamily names in different locales.
@@ -80,7 +83,13 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val subfamilies: Map<String, String>
-        get() = _subfamilies.toMap()
+        get() = _subfamilies.toImmutableMap()
+
+    /**
+     * Unique subfamily identification.
+     */
+    var uniqueIdentifier: String = ""
+        private set
 
     /**
      * Full names of the font in different locales.
@@ -89,7 +98,13 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val fullNames: Map<String, String>
-        get() = _fullNames.toMap()
+        get() = _fullNames.toImmutableMap()
+
+    /**
+     * Version of the name table.
+     */
+    var version: String = ""
+        private set
 
     /**
      * PostScript names of the font in different locales.
@@ -98,7 +113,16 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val postscriptNames: Map<String, String>
-        get() = _postscriptNames.toMap()
+        get() = _postscriptNames.toImmutableMap()
+
+    /**
+     * Trademark notices in different locales.
+     *
+     * Key are the tags for identifying languages based on the IETF BCP 47 specification -
+     * [BCP47](https://tools.ietf.org/html/bcp47).
+     */
+    val trademarks: Map<String, String>
+        get() = _trademarks.toImmutableMap()
 
     /**
      * Manufacturer names of the font in different locales.
@@ -107,7 +131,7 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val manufacturers: Map<String, String>
-        get() = _manufacturers.toMap()
+        get() = _manufacturers.toImmutableMap()
 
     /**
      * Designer names of the font in different locales.
@@ -116,7 +140,16 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val designers: Map<String, String>
-        get() = _designers.toMap()
+        get() = _designers.toImmutableMap()
+
+    /**
+     * descriptions of the typeface in different locales.
+     *
+     * Key are the tags for identifying languages based on the IETF BCP 47 specification -
+     * [BCP47](https://tools.ietf.org/html/bcp47).
+     */
+    val descriptions: Map<String, String>
+        get() = _descriptions.toImmutableMap()
 
     /**
      * URL of the font vendor.
@@ -131,13 +164,28 @@ class TTFFile internal constructor() {
         private set
 
     /**
+     * License descriptions in different locales.
+     *
+     * Key are the tags for identifying languages based on the IETF BCP 47 specification -
+     * [BCP47](https://tools.ietf.org/html/bcp47).
+     */
+    val licenseDescriptions: Map<String, String>
+        get() = _licenseDescriptions.toImmutableMap()
+
+    /**
+     * License information URL.
+     */
+    var licenseInfoURL = ""
+        private set
+
+    /**
      * Preferred Family names in different locales.
      *
      * Key are the tags for identifying languages based on the IETF BCP 47 specification -
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val preferFamilies: Map<String, String>
-        get() = _preferFamilies.toMap()
+        get() = _preferFamilies.toImmutableMap()
 
     /**
      * Preferred Subfamily names in different locales.
@@ -146,7 +194,7 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val preferSubfamilies: Map<String, String>
-        get() = _preferSubfamilies.toMap()
+        get() = _preferSubfamilies.toImmutableMap()
 
     /**
      * Sample Texts of the font in different locales.
@@ -155,7 +203,7 @@ class TTFFile internal constructor() {
      * [BCP47](https://tools.ietf.org/html/bcp47).
      */
     val sampleTexts: Map<String, String>
-        get() = _sampleTexts.toMap()
+        get() = _sampleTexts.toImmutableMap()
 
     /**
      * The weight class of this font. Valid values are 100, 200....,800, 900
@@ -176,7 +224,7 @@ class TTFFile internal constructor() {
      * Only available if the value of [variable] is `true`.
      */
     val variationAxes: List<VariationAxis>
-        get() = _variationAxes.toList()
+        get() = _variationAxes.toImmutableList()
 
     /**
      * The variation instances of this font if it is a variable font.
@@ -184,7 +232,7 @@ class TTFFile internal constructor() {
      * Only available if the value of [variable] is `true`.
      */
     val variationInstances: List<VariationInstance>
-        get() = _variationInstances.toList()
+        get() = _variationInstances.toImmutableList()
 
     /**
      * The variation axis data.
@@ -298,13 +346,11 @@ class TTFFile internal constructor() {
         val os2Entry = tableDirectories[TABLE_OS2]
         val fvarEntry = tableDirectories[TABLE_FVAR]
         // Read table by order of offset from the beginning of the file to reduce the reading duration
-        sequenceOf(nameEntry, os2Entry, fvarEntry).sortedBy { it?.offset }.forEach {
-            it?.let { tableDirectory ->
-                when (tableDirectory.tag) {
-                    TABLE_NAME -> readName(reader)
-                    TABLE_OS2 -> readWeight(reader)
-                    TABLE_FVAR -> runCatching { readFvarTable(reader) }
-                }
+        sequenceOf(nameEntry, os2Entry, fvarEntry).filterNotNull().sortedBy { it.offset }.forEach {
+            when (it.tag) {
+                TABLE_NAME -> readName(reader)
+                TABLE_OS2 -> readWeight(reader)
+                TABLE_FVAR -> runCatching { readFvarTable(reader) }
             }
         }
         if (variable) {
@@ -334,8 +380,8 @@ class TTFFile internal constructor() {
 
     /**
      * Read the [TABLE_NAME] table.
-     * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html
-     * https://docs.microsoft.com/en-us/typography/opentype/spec/name
+     * [Apple](https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6name.html)
+     * [Microsoft](https://docs.microsoft.com/en-us/typography/opentype/spec/name)
      *
      * @throws IOException In case of a I/O problem
      */
@@ -362,11 +408,13 @@ class TTFFile internal constructor() {
                 if (platformId != PLATFORM_ID_MACINTOSH && platformId != PLATFORM_ID_MICROSOFT
                     || encodingId != ENCODING_ID_UNICODE_1_0 && encodingId != ENCODING_ID_UNICODE_1_1
                 ) return@forEach
-                nameReader.seekAt((stringOffset
-                        // Back to the beginning of the table
-                        // We moved 3xUInt16 at the beginning of this function ↑.
-                        - 2 * 3
-                        + nameStringOffset).toLong())
+                nameReader.seekAt(
+                    (stringOffset
+                            // Back to the beginning of the table
+                            // We moved 3xUInt16 at the beginning of this function ↑.
+                            - 2 * 3
+                            + nameStringOffset).toLong()
+                )
                 val nameText: String = if (platformId == PLATFORM_ID_MICROSOFT) {
                     nameReader.readString(nameStringLength, Charsets.UTF_16BE)
                 } else {
@@ -377,17 +425,24 @@ class TTFFile internal constructor() {
                         NAME_ID_COPYRIGHT_NOTICE -> _copyrights[locale] = nameText
                         NAME_ID_FONT_FAMILY_NAME -> _families[locale] = nameText
                         NAME_ID_FONT_SUBFAMILY_NAME -> _subfamilies[locale] = nameText
+                        NAME_ID_UNIQUE_IDENTIFIER -> uniqueIdentifier = nameText
                         NAME_ID_FULL_FONT_NAME -> _fullNames[locale] = nameText
+                        NAME_ID_VERSION_STRING -> version = nameText
                         NAME_ID_POSTSCRIPT_NAME -> _postscriptNames[locale] = nameText
+                        NAME_ID_TRADEMARK -> _trademarks[locale] = nameText
                         NAME_ID_MANUFACTURER -> _manufacturers[locale] = nameText
                         NAME_ID_DESIGNER -> _designers[locale] = nameText
+                        NAME_ID_DESCRIPTION -> _descriptions[locale] = nameText
                         NAME_ID_VENDOR_URL -> vendorURL = nameText
                         NAME_ID_DESIGNER_URL -> if (designerURL.isEmpty()) designerURL = nameText
+                        NAME_ID_LICENSE_DESCRIPTION -> _licenseDescriptions[locale] = nameText
+                        NAME_ID_LICENSE_INFO_URL -> licenseInfoURL = nameText
                         NAME_ID_PREFERRED_FAMILY -> _preferFamilies[locale] = nameText
                         NAME_ID_PREFERRED_SUBFAMILY -> _preferSubfamilies[locale] = nameText
                         NAME_ID_SAMPLE_TEXT -> _sampleTexts[locale] = nameText
-                        in 256 until 32768 -> _extraFields[nameId]?.let { it[locale] = nameText }
+                        in 256..32767 -> _extraFields[nameId]?.let { it[locale] = nameText }
                             ?: run { _extraFields[nameId] = mutableMapOf(locale to nameText) }
+
                         else -> {}
                     }
                 }
@@ -397,8 +452,8 @@ class TTFFile internal constructor() {
 
     /**
      * Read the [TABLE_FVAR] table.
-     * https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6fvar.html
-     * https://learn.microsoft.com/en-us/typography/opentype/spec/fvar
+     * [Apple](https://developer.apple.com/fonts/TrueType-Reference-Manual/RM06/Chap6fvar.html)
+     * [Microsoft](https://learn.microsoft.com/en-us/typography/opentype/spec/fvar)
      *
      * @throws IOException In case of a I/O problem
      */
@@ -514,6 +569,14 @@ class TTFFile internal constructor() {
         @Throws(IOException::class)
         fun open(inputStream: InputStream): TTFFile =
             TTFFile().apply { readFont(FontStreamReader(inputStream)) }
+
+        @Suppress("NOTHING_TO_INLINE")
+        private inline fun <K, V> Map<K, V>.toImmutableMap(): Map<K, V> =
+            Collections.unmodifiableMap(this)
+
+        @Suppress("NOTHING_TO_INLINE")
+        private inline fun <T> List<T>.toImmutableList(): List<T> =
+            Collections.unmodifiableList(this)
     }
 }
 
@@ -531,6 +594,7 @@ class TTFFile internal constructor() {
  *
  *  @param locale the locale to get the value for.
  */
+@JvmName("getValueOrFallbackByLocale")
 operator fun Map<String, String>.get(locale: Locale): String =
     if (isEmpty()) ""
     else this[locale.toLanguageTag()]
@@ -544,20 +608,3 @@ operator fun Map<String, String>.get(locale: Locale): String =
         ?: this[Locale.ROOT.toLanguageTag()]
         ?: this.values.firstOrNull()
         ?: ""
-
-/**
- *  Returns the value of the specified locale in the font property map.
- *
- *  If no value is found for the specified [locale],
- *  fallback and try to find the first matching locale in the following order
- *  and returns the value corresponding to the found locale:
- *  - Locale in [map] that has the same language as the given [locale]
- *  - Tag of [Locale.US] generated by [Locale.toLanguageTag]
- *  - Locale with English language
- *  - Tag of [Locale.ROOT] generated by [Locale.toLanguageTag]
- *  - Locale of first entry in [map]
- *
- *  @param locale the locale to get the value for.
- */
-fun getValueOrFallbackByLocale(map: Map<String, String>, locale: Locale): String =
-    map[locale]
