@@ -39,9 +39,7 @@ internal data class TableDirectory(
      */
     @Throws(IOException::class)
     fun read(reader: FontStreamReader): TableDirectory {
-        val tagBuf = ByteArray(4)
-        reader.readTo(tagBuf)
-        tag = runCatching { String(tagBuf, Charsets.ISO_8859_1) }.getOrDefault("")
+        tag = runCatching { reader.readString(4, Charsets.ISO_8859_1) }.getOrDefault("")
         // Skip checksum
         reader.skip(4)
         offset = reader.readUInt32()
